@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".AddTaskActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newTaskInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newTaskInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/newTaskHint"
+            tools:ignore="TextContrastCheck" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="clip_horizontal|clip_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/taskWeightLabel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/taskWeightLabel"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/taskWeightRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <RadioButton
+            android:id="@+id/taskWeightLow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#4000FF0D"
+            android:checked="true"
+            android:text="@string/taskWeightLow"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <RadioButton
+            android:id="@+id/taskWeightMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#40FF7700"
+            android:text="@string/taskWeightMedium"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <RadioButton
+            android:id="@+id/taskWeightHigh"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#40FF0000"
+            android:text="@string/taskWeightHigh"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/addTaskButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/addTaskButton" />
+</LinearLayout>

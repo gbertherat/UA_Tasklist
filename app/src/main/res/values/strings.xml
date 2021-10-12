@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Liste de tâches</string>
+    <string name="addTaskMenu">Ajouter une tâche</string>
+    <string name="addTaskLabel">Ajouter une tâche</string>
+    <string name="newTaskHint">Entrez votre tâche</string>
+    <string name="taskWeightLabel">Importance de la tâche</string>
+    <string name="taskWeightLow">Basse</string>
+    <string name="taskWeightMedium">Moyenne</string>
+    <string name="taskWeightHigh">Haute</string>
+    <string name="addTaskButton">Ajouter</string>
+</resources>

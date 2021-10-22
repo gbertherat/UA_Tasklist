@@ -2,6 +2,8 @@ package fr.univangers.master.devmobile;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolde
         data = new ArrayList<>();
     }
 
+    public ArrayList<TaskItem> getData() {
+        return data;
+    }
+
     @NonNull
     @Override
     public Task_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,6 +38,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolde
     public void onBindViewHolder(@NonNull Task_ViewHolder holder, int position) {
         TaskItem item = data.get(position);
         holder.taskLabel.setText(item.label);
+        holder.itemView.setTag(position);
         switch(item.weight){
             case "2":
                 holder.taskWeight.setBackgroundColor(Color.parseColor("#80FFAA00"));
@@ -61,9 +68,39 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolde
         }
     }
 
-    static class TaskItem{
+    static class TaskItem implements Parcelable {
         String label;
         String weight;
+
+        public TaskItem(){}
+
+        protected TaskItem(Parcel in) {
+            label = in.readString();
+            weight = in.readString();
+        }
+
+        public static final Creator<TaskItem> CREATOR = new Creator<TaskItem>() {
+            @Override
+            public TaskItem createFromParcel(Parcel in) {
+                return new TaskItem(in);
+            }
+
+            @Override
+            public TaskItem[] newArray(int size) {
+                return new TaskItem[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(label);
+            parcel.writeString(weight);
+        }
     }
 
     public void add(String label, String weight){
@@ -72,5 +109,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolde
         item.weight = weight;
         data.add(item);
         notifyItemInserted(data.size()-1);
+    }
+
+    public void add(TaskItem item){
+        data.add(item);
+        notifyItemInserted(data.size()-1);
+    }
+
+    public void remove(int position){
+        data.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount() - position);
     }
 }

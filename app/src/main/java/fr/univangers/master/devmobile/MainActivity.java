@@ -36,15 +36,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         if(savedInstanceState != null){
-            System.out.println(savedInstanceState);
             for(Parcelable parcelable : savedInstanceState.getParcelableArrayList("savedList")){
-                TaskAdapter.TaskItem item = (TaskAdapter.TaskItem) parcelable;
-                adapter.add(item);
+                adapter.add((TaskAdapter.TaskItem) parcelable);
             }
         } else {
             Pattern pattern = Pattern.compile("<[1-3]>");
             for(String string : FakeData.get_tasks()){
-                String weight = "";
+                String weight;
                 Matcher m = pattern.matcher(string);
                 if(m.find()){
                     weight = m.group();
@@ -55,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        taskList = adapter.getData();
 
         ItemTouchHelper.SimpleCallback touchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
@@ -84,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        taskList = adapter.getData();
     }
 
     @Override

@@ -1,6 +1,10 @@
 package fr.univangers.master.devmobile;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,12 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolder>{
     private Context context;
+    private TaskDbHelper helper;
     private ArrayList<TaskItem> data;
 
-    public TaskAdapter(Context context){
-        this.context= context;
+    public TaskAdapter(Context context, TaskDbHelper helper){
+        this.context = context;
+        this.helper = helper;
         data = new ArrayList<>();
     }
 
@@ -52,14 +58,76 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolde
         }
     }
 
+    public void getDataFromDatabase(){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] projection = {
+                TaskContract.TaskEntry._ID,
+                TaskContract.TaskEntry.COLUMN_WEIGHT,
+                TaskContract.TaskEntry.COLUMN_LABEL,
+        };
+
+        Cursor cursor = db.query(
+                TaskContract.TaskEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        while(cursor.moveToNext()){
+            TaskItem item = new TaskItem();
+            item.id = cursor.getInt(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry._ID));
+            item.weight = String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_WEIGHT)));
+            item.label = cursor.getString(cursor.getColumnIndexOrThrow(TaskContract.TaskEntry.COLUMN_LABEL));
+            add(item);
+        }
+        cursor.close();
+    }
+
+    // Item déjà créé = Pas besoin d'ajouter en BDD (possède déjà un ID)
+    public void add(TaskItem item){
+        data.add(item);
+        notifyItemInserted(data.size()-1);
+    }
+
+    // Item sans ID, donc on le créé en BDD.
+    public void add(String label, String weight){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(TaskContract.TaskEntry.COLUMN_WEIGHT, weight);
+        values.put(TaskContract.TaskEntry.COLUMN_LABEL, label);
+        long id = db.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
+        db.close();
+
+        TaskItem item = new TaskItem();
+        item.label = label;
+        item.weight = weight;
+        item.id = (int) id;
+
+        data.add(item);
+        notifyItemInserted(data.size()-1);
+    }
+
+    // Suppression de l'item de la liste et en BDD en utilisant son ID.
+    public void remove(int position){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry._ID + "=?", new String[]{String.valueOf(data.get(position).id)});
+        db.close();
+        data.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount() - position);
+    }
+
     @Override
     public int getItemCount() {
         return data.size();
     }
 
-    public class Task_ViewHolder extends RecyclerView.ViewHolder{
-        private TextView taskLabel;
-        private View taskWeight;
+    public static class Task_ViewHolder extends RecyclerView.ViewHolder{
+        private final TextView taskLabel;
+        private final View taskWeight;
 
         public Task_ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,13 +136,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolde
         }
     }
 
-    static class TaskItem implements Parcelable {
+    public static class TaskItem implements Parcelable {
+        int id;
         String label;
         String weight;
 
         public TaskItem(){}
 
         protected TaskItem(Parcel in) {
+            id = in.readInt();
             label = in.readString();
             weight = in.readString();
         }
@@ -98,27 +168,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.Task_ViewHolde
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeInt(id);
             parcel.writeString(label);
             parcel.writeString(weight);
         }
-    }
-
-    public void add(String label, String weight){
-        TaskItem item = new TaskItem();
-        item.label = label;
-        item.weight = weight;
-        data.add(item);
-        notifyItemInserted(data.size()-1);
-    }
-
-    public void add(TaskItem item){
-        data.add(item);
-        notifyItemInserted(data.size()-1);
-    }
-
-    public void remove(int position){
-        data.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, getItemCount() - position);
     }
 }

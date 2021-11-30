@@ -5,6 +5,11 @@
         android:id="@+id/addTaskMenu"
         android:title="@string/addTaskMenu"
         android:orderInCategory="1"
-        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/settingsMenu"
+        android:title="@string/settingsMenu"
+        android:orderInCategory="2"
         />
 </menu>

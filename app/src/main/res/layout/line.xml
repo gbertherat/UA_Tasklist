@@ -26,7 +26,7 @@
 
         <View
             android:id="@+id/labelPadding"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_weight="1" />
 

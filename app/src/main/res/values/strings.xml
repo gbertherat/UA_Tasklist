@@ -8,4 +8,8 @@
     <string name="taskWeightMedium">Moyenne</string>
     <string name="taskWeightHigh">Haute</string>
     <string name="addTaskButton">Ajouter</string>
+    <string name="settingsMenu">Paramètres</string>
+    <string name="policeSizeTitle">Taille de police</string>
+    <string name="displayPriorities">Afficher les priorités</string>
+    <string name="policeSize">Taille de police: 16</string>
 </resources>

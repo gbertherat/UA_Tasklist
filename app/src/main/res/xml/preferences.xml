@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/displayPriorities"
+        android:title="@string/displayPriorities"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        />
+    <EditTextPreference
+        android:defaultValue="100"
+        android:dialogTitle="@string/policeSizeTitle"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:key="@string/policeSize"
+        android:summary="@string/policeSize"
+        android:title="@string/policeSizeTitle"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        />
+</PreferenceScreen>
